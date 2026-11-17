@@ -78,3 +78,14 @@ body.modal-open{overflow:hidden}
 .discount-line{display:block;color:#dc4b32;font:600 9px "DM Sans";margin-top:3px}
 .cart-promo-note{margin:14px 0 18px;padding:11px 12px;border-radius:5px;background:#fff5d6;color:#71602d;font-size:10px;display:flex;justify-content:space-between;gap:8px}
 .cart-promo-note strong{white-space:nowrap;color:#4f421e}
+
+
+/* Sticky navigation and add-to-cart motion */
+.header{position:sticky;top:0;z-index:25;background:var(--paper);box-shadow:0 8px 18px #19191608}
+.cart-btn{position:relative;transition:transform .2s,border-color .2s}
+.cart-btn.cart-bump{animation:cartBump .42s cubic-bezier(.2,.8,.2,1)}
+.cart-btn b.count-pop{animation:countPop .35s ease-out}
+@keyframes cartBump{0%,100%{transform:scale(1)}35%{transform:scale(1.13)}65%{transform:scale(.96)}}
+@keyframes countPop{0%{transform:scale(.5)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.flying-pizza{position:fixed;z-index:1000;pointer-events:none;border-radius:50%;overflow:hidden;box-shadow:0 8px 25px #2b211c44;border:5px solid #d39a52;background:radial-gradient(circle,#f8d77f 0 64%,#c78c48 65% 76%,#f5d49a 77%);will-change:transform,opacity}
+@media(max-width:760px){.header{width:100%;padding-left:19px;padding-right:19px}.nav{top:68px}}
