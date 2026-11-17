@@ -78,28 +78,63 @@ document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener("c
   const target=document.querySelector(link.getAttribute("href"));
   if(target){event.preventDefault();target.scrollIntoView({behavior:"smooth"});}
 }));
-document.querySelectorAll(".size-picker").forEach(group=>{
-  group.addEventListener("click",event=>{
-    const option=event.target.closest(".size-option");
-    if(!option)return;
-    group.querySelectorAll(".size-option").forEach(button=>button.classList.toggle("active",button===option));
+function flyPizzaToCart(card){
+  const source=card.querySelector(".pizza-art")||card.querySelector(".product-visual");
+  const target=document.getElementById("cartBtn");
+  if(!source||!target)return;
+  const from=source.getBoundingClientRect();
+  const to=target.getBoundingClientRect();
+  const size=Math.max(42,Math.min(76,from.width*.42));
+  const flyer=document.createElement("div");
+  flyer.className="flying-pizza";
+  flyer.style.width=size+"px";
+  flyer.style.height=size+"px";
+  flyer.style.left=(from.left+from.width/2-size/2)+"px";
+  flyer.style.top=(from.top+from.height/2-size/2)+"px";
+  document.body.appendChild(flyer);
+  const dx=(to.left+to.width/2)-(from.left+from.width/2);
+  const dy=(to.top+to.height/2)-(from.top+from.height/2);
+  const animation=flyer.animate([
+    {transform:"translate(0,0) scale(1) rotate(0deg)",opacity:1},
+    {transform:"translate("+dx*.72+"px,"+dy*.72+"px) scale(.65) rotate(160deg)",opacity:.95,offset:.72},
+    {transform:"translate("+dx+"px,"+dy+"px) scale(.12) rotate(260deg)",opacity:0}
+  ],{duration:680,easing:"cubic-bezier(.2,.75,.25,1)"});
+  animation.onfinish=()=>flyer.remove();
+}
+function bumpCart(){
+  const button=document.getElementById("cartBtn");
+  const count=document.getElementById("cartCount");
+  button.classList.remove("cart-bump");
+  count.classList.remove("count-pop");
+  void button.offsetWidth;
+  button.classList.add("cart-bump");
+  count.classList.add("count-pop");
+}
+document.addEventListener("click",event=>{
+  const sizeOption=event.target.closest(".size-option");
+  if(sizeOption){
+    const group=sizeOption.closest(".size-picker");
+    if(!group)return;
+    group.querySelectorAll(".size-option").forEach(button=>button.classList.toggle("active",button===sizeOption));
     const card=group.closest(".product-card");
-    card.querySelector(".product-price").textContent=money(Number(option.dataset.price));
-  });
-});
-document.querySelectorAll(".product-card .add-btn").forEach(button=>{
-  button.addEventListener("click",()=>{
-    const card=button.closest(".product-card");
+    card.querySelector(".product-price").textContent=money(Number(sizeOption.dataset.price));
+    return;
+  }
+  const addButton=event.target.closest(".product-card .add-btn");
+  if(addButton){
+    const card=addButton.closest(".product-card");
     const variant=selectedVariant(card);
     const id=card.dataset.product;
+    flyPizzaToCart(card);
     const existing=cart.find(item=>item.id===id&&item.size===variant.size);
     if(existing)existing.qty+=1;
     else cart.push({id,...variant,qty:1});
     renderCart();
+    bumpCart();
     notify(products[id].name+" додано до кошика 🍕");
-    button.innerHTML="Додано ✓";
-    setTimeout(()=>button.innerHTML='У кошик <span>＋</span>',1000);
-  });
+    addButton.innerHTML="Додано ✓";
+    setTimeout(()=>addButton.innerHTML='У кошик <span>＋</span>',1000);
+  }
 });
 document.querySelectorAll(".favorite-btn").forEach(button=>{
   button.addEventListener("click",()=>{
