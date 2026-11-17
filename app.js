@@ -110,6 +110,7 @@ document.querySelectorAll(".favorite-btn").forEach(button=>{
   });
 });
 document.getElementById("cartContent").addEventListener("click",event=>{
+  if(event.target.closest("[data-close-cart]")){closeCart();return;}
   const qtyButton=event.target.closest("[data-qty]");
   const removeButton=event.target.closest("[data-remove]");
   if(qtyButton){
