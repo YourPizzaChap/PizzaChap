@@ -73,3 +73,8 @@
 .success-card h2{font-size:27px;line-height:1.1;margin:12px 0}.success-card p{font-size:12px;line-height:1.7;color:#858178;margin:0 0 24px}
 @media(max-width:900px){.products-grid{gap:14px}.product-visual{height:220px}.promo-badge{width:84px;height:84px;font-size:24px}.promo-badge small{font-size:8px}.product-info{padding:14px}.product-title-row h3{font-size:16px}.size-option{font-size:9px;padding:9px 2px}.product-price{font-size:20px}.add-btn{padding:10px 11px}}
 @media(max-width:650px){.products-grid{grid-template-columns:1fr;gap:18px}.product-card{display:grid;grid-template-columns:42% 58%;min-height:225px}.product-visual{height:100%;min-height:225px}.pizza-art{width:88%;border-width:8px}.promo-badge{left:8px;bottom:8px;width:68px;height:68px;font-size:20px}.promo-badge small{font-size:7px}.favorite-btn{right:8px;top:8px;width:30px;height:30px;font-size:20px}.product-info{padding:13px 12px}.product-title-row h3{font-size:15px}.product-description{font-size:10px;min-height:52px;margin:8px 0 10px}.size-option{font-size:8px;padding:8px 1px}.product-price{font-size:18px}.add-btn{font-size:9px;padding:9px 8px}.menu-intro{font-size:11px}.cart-panel{padding:22px 18px}.cart-line{grid-template-columns:56px 1fr auto;gap:10px}.cart-thumb{width:56px;height:56px}.success-card{padding:30px 22px}}
+
+body.modal-open{overflow:hidden}
+.discount-line{display:block;color:#dc4b32;font:600 9px "DM Sans";margin-top:3px}
+.cart-promo-note{margin:14px 0 18px;padding:11px 12px;border-radius:5px;background:#fff5d6;color:#71602d;font-size:10px;display:flex;justify-content:space-between;gap:8px}
+.cart-promo-note strong{white-space:nowrap;color:#4f421e}
