@@ -1,0 +1,12 @@
+{
+  "name": "pizzachap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PizzaChap — платформа доставки піци",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
