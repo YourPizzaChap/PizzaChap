@@ -78,28 +78,40 @@ document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener("c
   const target=document.querySelector(link.getAttribute("href"));
   if(target){event.preventDefault();target.scrollIntoView({behavior:"smooth"});}
 }));
-function flyPizzaToCart(card){
-  const source=card.querySelector(".pizza-art")||card.querySelector(".product-visual");
+function flyPizzaToCart(addButton){
   const target=document.getElementById("cartBtn");
-  if(!source||!target)return;
-  const from=source.getBoundingClientRect();
+  if(!addButton||!target||!target.getClientRects().length)return;
+  // The pizza starts exactly at the clicked "У кошик" button.
+  const from=addButton.getBoundingClientRect();
   const to=target.getBoundingClientRect();
-  const size=Math.max(42,Math.min(76,from.width*.42));
+  const size=38;
+  const startX=from.left+from.width/2-size/2;
+  const startY=from.top+from.height/2-size/2;
+  const endX=to.left+to.width/2-size/2;
+  const endY=to.top+to.height/2-size/2;
   const flyer=document.createElement("div");
   flyer.className="flying-pizza";
+  flyer.setAttribute("aria-hidden","true");
+  flyer.innerHTML="<i></i><i></i><i></i><b></b>";
   flyer.style.width=size+"px";
   flyer.style.height=size+"px";
-  flyer.style.left=(from.left+from.width/2-size/2)+"px";
-  flyer.style.top=(from.top+from.height/2-size/2)+"px";
+  flyer.style.left=startX+"px";
+  flyer.style.top=startY+"px";
   document.body.appendChild(flyer);
-  const dx=(to.left+to.width/2)-(from.left+from.width/2);
-  const dy=(to.top+to.height/2)-(from.top+from.height/2);
-  const animation=flyer.animate([
-    {transform:"translate(0,0) scale(1) rotate(0deg)",opacity:1},
-    {transform:"translate("+dx*.72+"px,"+dy*.72+"px) scale(.65) rotate(160deg)",opacity:.95,offset:.72},
-    {transform:"translate("+dx+"px,"+dy+"px) scale(.12) rotate(260deg)",opacity:0}
-  ],{duration:680,easing:"cubic-bezier(.2,.75,.25,1)"});
-  animation.onfinish=()=>flyer.remove();
+  if(typeof flyer.animate==="function"){
+    const animation=flyer.animate([
+      {transform:"translate3d(0,0,0) scale(.65) rotate(0deg)",opacity:0},
+      {transform:"translate3d(0,0,0) scale(1) rotate(0deg)",opacity:1,offset:.12},
+      {transform:"translate3d("+(endX-startX)*.72+"px,"+(endY-startY)*.72+"px,0) scale(.62) rotate(210deg)",opacity:1,offset:.78},
+      {transform:"translate3d("+(endX-startX)+"px,"+(endY-startY)+"px,0) scale(.12) rotate(320deg)",opacity:0}
+    ],{duration:760,easing:"cubic-bezier(.18,.72,.22,1)"});
+    animation.onfinish=()=>flyer.remove();
+    animation.oncancel=()=>flyer.remove();
+  }else{
+    flyer.style.transition="transform .76s ease-in, opacity .76s ease-in";
+    requestAnimationFrame(()=>{flyer.style.transform="translate3d("+(endX-startX)+"px,"+(endY-startY)+"px,0) scale(.12) rotate(320deg)";flyer.style.opacity="0";});
+    setTimeout(()=>flyer.remove(),800);
+  }
 }
 function bumpCart(){
   const button=document.getElementById("cartBtn");
@@ -125,7 +137,7 @@ document.addEventListener("click",event=>{
     const card=addButton.closest(".product-card");
     const variant=selectedVariant(card);
     const id=card.dataset.product;
-    flyPizzaToCart(card);
+    flyPizzaToCart(addButton);
     const existing=cart.find(item=>item.id===id&&item.size===variant.size);
     if(existing)existing.qty+=1;
     else cart.push({id,...variant,qty:1});
