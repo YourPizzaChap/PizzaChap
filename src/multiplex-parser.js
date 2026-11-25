@@ -1,4 +1,4 @@
-const SESSION_URL_RE = /(?:https?:)?\/\/new\.multiplex\.ua\/order\/cinema\/[^"'\\s<>]+\/session\/(?<id>\d+)/gi;
+const SESSION_URL_RE = /(?:https?:)?\/\/new\.multiplex\.ua\/order\/cinema\/[^"'\s<>]+\/session\/(?<id>\d+)/gi;
 const PROTECTION_MARKERS = ["cloudflare", "captcha", "access denied", "too many requests", "temporarily blocked", "checking your browser", "verify you are human"];
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function cleanText(value) {
