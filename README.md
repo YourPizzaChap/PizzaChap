@@ -1,27 +1,41 @@
-# PizzaChap
+# MultiStaff Multiplex Parser API
 
-A delivery platform connecting customers, local pizzerias, and couriers.
+Independent server-side service for collecting Multiplex cinema schedules and exposing them to MultiStaff ADMIN and the Telegram bot.
 
-## First milestone
-- Responsive Ukrainian landing page
-- Marketplace positioning and customer journey
-- Separate onboarding sections for pizzerias and couriers
-- Menu placeholder while partners and catalog are being prepared
-- Mobile navigation and basic UI interactions
-- Nginx Docker image for Northflank
+The Unity application is not part of this service. Its old parser is used only as a reference for the extraction rules.
 
-## Run locally
-Open `index.html` in a browser, or run `python3 -m http.server 8080`.
+## Current implementation stage
 
-## Deploy to Northflank
-Create a service from this GitHub repository and build using the included `Dockerfile`. The site listens on port **80**.
+This repository is being rebuilt as a Node.js API service. Google Sheets credentials and spreadsheet access are configured later through Northflank environment variables; private keys must never be committed.
 
-## Roadmap
-1. Menu/catalog, product details, cart, and checkout.
-2. Backend API and order lifecycle.
-3. Firebase authentication and order persistence.
-4. Pizzeria dashboard and courier assignment/dispatch.
-5. Courier profile and delivery management.
-6. Telegram bot for courier notifications and order controls.
+## Planned behavior
 
-**Important:** this first version is a frontend landing page only. It does not accept or dispatch real orders yet. Contact links are placeholders and should be replaced with real business contacts before launch.
+- Atmosfera and Karavan spreadsheets are enabled initially; Retroville is postponed.
+- One spreadsheet per cinema; the service creates the required tabs and configuration structure.
+- Weekly archive tabs are preserved and never replace previous weeks.
+- Automatic collection starts every Tuesday at 00:00 in Europe/Kyiv.
+- Collection window ends Wednesday at 08:00 in Europe/Kyiv.
+- Manual collection can be started independently and does not change the next scheduled run.
+- One global queue serializes all Multiplex collection work.
+- Requests are paced; HTTP 403/429 and anti-bot challenge pages trigger a pause/backoff.
+- Empty, failed, or insufficiently complete parses never overwrite valid archived schedules.
+- Job progress reflects completed work and successful persistence, not elapsed time.
+
+## Local development
+
+```bash
+npm install
+npm run dev
+```
+
+The service listens on `PORT` (default `3000`).
+
+## Northflank
+
+Build from this repository using the included Dockerfile. Keep the service running continuously. Configure Google service-account credentials and other secrets as environment variables in Northflank, never in Git.
+
+## API
+
+Initial health endpoint: `GET /health`.
+
+Further schedule, status, configuration, and admin endpoints will be added in subsequent implementation steps.
