@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Independent Multiplex schedule parser and Google Sheets API for MultiStaff",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "check": "node --check src/server.js"
+    "check": "node --check src/server.js && node --check src/config.js && node --check src/multiplex-parser.js && node --check src/google-sheets.js && node --check src/job-queue.js"
   },
   "dependencies": {
     "express": "^5.1.0",
