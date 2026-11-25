@@ -11,7 +11,7 @@ function protectionPage(html) { const s=String(html||"").toLowerCase(); return !
 function sessionUrls(html) {
   const seen=new Set(), urls=[];
   for (const m of String(html||"").matchAll(SESSION_URL_RE)) {
-    if (!seen.has(m.groups.id)) { seen.add(m.groups.id); urls.push("https://new.multiplex.ua"+m[0].replace(/^https?:/,"").replace(/^\/\//,"/")); }
+    if (!seen.has(m.groups.id)) { seen.add(m.groups.id); urls.push(new URL(m[0].startsWith("//") ? "https:"+m[0] : m[0]).href); }
   }
   return urls;
 }
