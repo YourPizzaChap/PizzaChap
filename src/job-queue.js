@@ -2,11 +2,11 @@ const {collectCinema}=require("./multiplex-parser");
 const {writeSchedule}=require("./google-sheets");
 const {normalizeConfig}=require("./config");
 const jobs=new Map();
-const queue=[];
+const queue=[];\nconst lastSchedules=new Map();
 let running=false, config=normalizeConfig();
 function setConfig(next){config=normalizeConfig(next);return config;}
 function getConfig(){return config;}
-function snapshot(){return {running,queued:queue.length,jobs:[...jobs.values()].slice(-30).reverse()};}
+function snapshot(){return {running,queued:queue.length,jobs:[...jobs.values()].slice(-30).reverse()};}\nfunction getSchedule(cinema){return lastSchedules.get(cinema)||[];}
 function enqueue(cinemaKeys,trigger="manual") {
   const ids=[];
   for(const key of cinemaKeys) {
@@ -36,4 +36,4 @@ async function processQueue(){
     }
   }finally{running=false;}
 }
-module.exports={setConfig,getConfig,enqueue,snapshot};
+module.exports={setConfig,getConfig,enqueue,snapshot,getSchedule};
