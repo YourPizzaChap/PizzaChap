@@ -22,7 +22,7 @@ async function ensureTab(sheets,spreadsheetId,title,index=0) {
   const result=await sheets.spreadsheets.batchUpdate({spreadsheetId,requestBody:{requests:[{addSheet:{properties:{title,index}}}]}});
   return result.data.replies[0].addSheet.properties.sheetId;
 }
-async function saveConfig(spreadsheetId,config) {
+async function readConfig(spreadsheetId) {\n  const sheets=getSheets();\n  try {\n    const result=await sheets.spreadsheets.values.get({spreadsheetId,range:'Config!B2'});\n    const raw=result.data.values?.[0]?.[0];\n    return raw ? JSON.parse(raw) : null;\n  } catch(error) { if(error.code===400 || error.code===404) return null; throw error; }\n}\nasync function saveConfig(spreadsheetId,config) {
   const sheets=getSheets();
   await ensureTab(sheets,spreadsheetId,"Config",0);
   await sheets.spreadsheets.values.update({spreadsheetId,range:"Config!A1:B2",valueInputOption:"RAW",requestBody:{values:[["key","value"],["multiplexParserConfig",JSON.stringify(config)]]}});
@@ -39,4 +39,4 @@ async function writeSchedule(spreadsheetId,sessions,meta={}) {
   await sheets.spreadsheets.values.update({spreadsheetId,range:"Config!A4:B8",valueInputOption:"RAW",requestBody:{values:[["lastSuccessfulRun",new Date().toISOString()],["lastSessionsCount",String(sessions.length)],["lastCinema",meta.cinema||""],["lastTab",title],["lastFailedPages",String(meta.failed||0)]]}});
   return {tab:title,count:sessions.length};
 }
-module.exports={saveConfig,writeSchedule};
+module.exports={readConfig,saveConfig,writeSchedule};
