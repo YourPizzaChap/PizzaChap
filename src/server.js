@@ -15,7 +15,7 @@ app.use(express.json({ limit: "256kb" }));
 
 function requireAdmin(req,res,next) {
   if (!token) return res.status(503).json({error:"PARSER_ADMIN_TOKEN is not configured."});
-  const supplied=(req.headers.authorization||"").replace(/^Bearer\\s+/i,"");
+  const supplied=(req.headers.authorization||"").replace(/^Bearer\s+/i,"");
   if(supplied!==token) return res.status(401).json({error:"Unauthorized"});
   next();
 }
